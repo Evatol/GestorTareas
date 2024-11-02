@@ -1,15 +1,49 @@
 <template>
   <div id="app">
-    <!-- Barra de navegación con enlaces a diferentes rutas -->
-    <nav>
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link> |
-      <router-link to="/addtask">Agregar Tarea</router-link> 
-    </nav>
-    <!-- Aquí se cargará el componente correspondiente a la ruta seleccionada -->
-    <router-view/>
+    <h1>Gestor de Tareas</h1>
+    <!-- Componente para añadir nuevas tareas -->
+    <AgregarTarea @nuevaTarea="agregarTarea" />
+    
+    <!-- Lista de tareas, pasando cada tarea a un componente TodoItem -->
+    <ul>
+      <TodoItem
+        v-for="(tarea, index) in tareas"
+        :key="index"
+        :tarea="tarea"
+        @eliminarTarea="eliminarTarea(index)"
+        @actualizarTarea="actualizarEstado(index)"
+      />
+    </ul>
   </div>
 </template>
+
+<script>
+import AgregarTarea from './components/AgregarTarea.vue';
+import TodoItem from './components/TodoItem.vue';
+
+export default {
+  components: {
+    AgregarTarea,
+    TodoItem,
+  },
+  data() {
+    return {
+      tareas: [], // Aquí almacenamos las tareas
+    };
+  },
+  methods: {
+    agregarTarea(texto) {
+      this.tareas.push({ texto, completada: false });
+    },
+    eliminarTarea(index) {
+      this.tareas.splice(index, 1);
+    },
+    actualizarEstado(index) {
+      this.tareas[index].completada = !this.tareas[index].completada;
+    },
+  },
+};
+</script>
 
 <style>
 #app {
