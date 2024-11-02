@@ -1,17 +1,21 @@
 <template>
-  <div id="app">
-    <h1>Gestor de Tareas</h1>
-    <!-- Componente para añadir nuevas tareas -->
-    <AgregarTarea @nuevaTarea="agregarTarea" />
+  <div id="app" class="container my-4">
+    <h1 class="text-center mb-4">Gestor de Tareas</h1>
     
-    <!-- Lista de tareas, pasando cada tarea a un componente TodoItem -->
-    <ul>
+    <!-- Componente para agregar una nueva tarea -->
+    <AgregarTarea @nueva-tarea="agregarTarea" />
+
+    <!-- Componente para extraer tareas desde la API -->
+    <ExtraerTareas @agregar-tareas-api="agregarTareasApi" />
+
+    <!-- Lista de tareas -->
+    <ul class="list-group mt-3">
       <TodoItem
         v-for="(tarea, index) in tareas"
         :key="index"
         :tarea="tarea"
-        @eliminarTarea="eliminarTarea(index)"
-        @actualizarTarea="actualizarEstado(index)"
+        @eliminar-tarea="eliminarTarea(index)"
+        @actualizar-estado="actualizarEstado(index)"
       />
     </ul>
   </div>
@@ -19,31 +23,37 @@
 
 <script>
 import AgregarTarea from './components/AgregarTarea.vue';
+import ExtraerTareas from './components/ExtraerTareas.vue';
 import TodoItem from './components/TodoItem.vue';
 
 export default {
   components: {
     AgregarTarea,
+    ExtraerTareas,
     TodoItem,
   },
   data() {
     return {
-      tareas: [], // Aquí almacenamos las tareas
+      tareas: [], // Lista principal de tareas
     };
   },
   methods: {
-    agregarTarea(texto) {
-      this.tareas.push({ texto, completada: false });
+    agregarTarea(nuevaTarea) {
+      this.tareas.push(nuevaTarea); // Agrega una tarea nueva
+    },
+    agregarTareasApi(tareasApi) {
+      this.tareas = [...this.tareas, ...tareasApi]; // Añade tareas obtenidas de la API
     },
     eliminarTarea(index) {
-      this.tareas.splice(index, 1);
+      this.tareas.splice(index, 1); // Elimina una tarea específica
     },
     actualizarEstado(index) {
-      this.tareas[index].completada = !this.tareas[index].completada;
+      this.tareas[index].completed = !this.tareas[index].completed; // Cambia el estado de completado
     },
   },
 };
 </script>
+
 
 <style>
 #app {
