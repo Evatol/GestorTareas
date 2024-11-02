@@ -21,3 +21,10 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.card {
+  background-color: #e9ecef;
+}
+</style>
+
